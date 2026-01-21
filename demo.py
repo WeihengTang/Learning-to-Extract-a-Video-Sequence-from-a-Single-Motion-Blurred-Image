@@ -19,19 +19,24 @@ args = parser.parse_args()
 # Determine device for loading models
 device = torch.device('cuda' if args.cuda and torch.cuda.is_available() else 'cpu')
 
+def load_checkpoint(path, model, device):
+    """Load checkpoint, filtering out InstanceNorm running stats for PyTorch 0.4+ compatibility."""
+    checkpoint = torch.load(path, map_location=device)
+    state_dict = checkpoint['state_dict_G']
+    # Filter out running_mean/running_var (not used with track_running_stats=False)
+    filtered = {k: v for k, v in state_dict.items()
+                if 'running_mean' not in k and 'running_var' not in k and 'num_batches' not in k}
+    model.load_state_dict(filtered, strict=False)
+
 # load model
 model1 = centerEsti()
 model2 = F35_N8()
 model3 = F26_N9()
 model4 = F17_N9()
-checkpoint = torch.load('models/center_v3.pth', map_location=device)
-model1.load_state_dict(checkpoint['state_dict_G'], strict=False)
-checkpoint = torch.load('models/F35_N8.pth', map_location=device)
-model2.load_state_dict(checkpoint['state_dict_G'], strict=False)
-checkpoint = torch.load('models/F26_N9_from_F35_N8.pth', map_location=device)
-model3.load_state_dict(checkpoint['state_dict_G'], strict=False)
-checkpoint = torch.load('models/F17_N9_from_F26_N9_from_F35_N8.pth', map_location=device)
-model4.load_state_dict(checkpoint['state_dict_G'], strict=False)
+load_checkpoint('models/center_v3.pth', model1, device)
+load_checkpoint('models/F35_N8.pth', model2, device)
+load_checkpoint('models/F26_N9_from_F35_N8.pth', model3, device)
+load_checkpoint('models/F17_N9_from_F26_N9_from_F35_N8.pth', model4, device)
 
 if args.cuda:
     model1.cuda()

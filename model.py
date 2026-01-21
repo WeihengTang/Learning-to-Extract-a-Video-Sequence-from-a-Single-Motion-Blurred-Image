@@ -43,9 +43,9 @@ def pixel_reshuffle(input, upscale_factor):
 class FourDilateConvResBlockIN(nn.Module):
     def __init__(self, in_channels, out_channels, dilation2, dilation4):
         super(FourDilateConvResBlockIN, self).__init__()
-        self.norm1 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
-        self.norm2 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
-        self.norm4 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
+        self.norm1 = nn.InstanceNorm2d(in_channels, affine=True)
+        self.norm2 = nn.InstanceNorm2d(in_channels, affine=True)
+        self.norm4 = nn.InstanceNorm2d(in_channels, affine=True)
         self.relu = nn.ReLU(inplace=True)
         self.conv1 = nn.Conv2d(in_channels,  out_channels, (1, 1), (1, 1), (0, 0), bias=False)
         self.conv2 = nn.Conv2d(in_channels,  out_channels, (3, 3), (1, 1), (dilation2, dilation2), (dilation2, dilation2), bias=False)
@@ -71,9 +71,9 @@ class FourDilateConvResBlockIN(nn.Module):
 class FourConvResBlockIN(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(FourConvResBlockIN, self).__init__()
-        self.norm1 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
-        self.norm2 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
-        self.norm4 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
+        self.norm1 = nn.InstanceNorm2d(in_channels, affine=True)
+        self.norm2 = nn.InstanceNorm2d(in_channels, affine=True)
+        self.norm4 = nn.InstanceNorm2d(in_channels, affine=True)
         self.relu = nn.ReLU(inplace=True)
         self.conv1 = nn.Conv2d(in_channels, out_channels, (1, 1), (1, 1), (0, 0), bias=False)
         self.conv2 = nn.Conv2d(in_channels, out_channels, (3, 3), (1, 1), (1, 1), bias=False)
@@ -99,8 +99,8 @@ class FourConvResBlockIN(nn.Module):
 class TwoConvBlockIN(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(TwoConvBlockIN, self).__init__()
-        self.norm1 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
-        self.norm2 = nn.InstanceNorm2d(track_running_stats=True, num_features=in_channels, affine=True)
+        self.norm1 = nn.InstanceNorm2d(in_channels, affine=True)
+        self.norm2 = nn.InstanceNorm2d(in_channels, affine=True)
 
         self.relu = nn.ReLU(inplace=True)
         self.conv1 = nn.Conv2d(in_channels, out_channels, (1, 1), (1, 1), (0, 0), bias=False)
@@ -128,7 +128,7 @@ class centerEsti(nn.Module):
         self.conv1_B  = nn.Conv2d( 16,  144, (5, 5), (1, 1), (2, 2), bias=False)
         self.conv2  = nn.Conv2d( 3,  64, (3, 3), (1, 1), (1, 1), bias=False)
         
-        self.norm3 = nn.InstanceNorm2d(track_running_stats=True, num_features=64, affine=True)
+        self.norm3 = nn.InstanceNorm2d(64, affine=True)
         self.relu = nn.ReLU(inplace=True)
         self.conv3  = nn.Conv2d( 64,  3, (3, 3), (1, 1), (1, 1), bias=False)
 
@@ -223,7 +223,7 @@ class N9_IN(nn.Module):
         self.conv1_S2  = nn.Conv2d( 25,  32, (5, 5), (1, 1), (2, 2), bias=False)
         self.conv2  = nn.Conv2d( 3,  32, (3, 3), (1, 1), (1, 1), bias=False)
         
-        self.norm3 = nn.InstanceNorm2d(track_running_stats=True, num_features=32, affine=True)
+        self.norm3 = nn.InstanceNorm2d(32, affine=True)
         self.relu = nn.ReLU(inplace=True)
         self.conv3  = nn.Conv2d( 32,  3, (3, 3), (1, 1), (1, 1), bias=False)
 
@@ -393,7 +393,7 @@ class N8_IN(nn.Module):
         self.conv1_S2  = nn.Conv2d( 25,  32, (5, 5), (1, 1), (2, 2), bias=False)
         self.conv2  = nn.Conv2d( 3,  32, (3, 3), (1, 1), (1, 1), bias=False)
         
-        self.norm3 = nn.InstanceNorm2d(track_running_stats=True, num_features=32, affine=True)
+        self.norm3 = nn.InstanceNorm2d(32, affine=True)
         self.relu = nn.ReLU(inplace=True)
         self.conv3  = nn.Conv2d( 32,  3, (3, 3), (1, 1), (1, 1), bias=False)
 
