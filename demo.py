@@ -1,4 +1,5 @@
 from __future__ import print_function
+import os
 import argparse
 import torch
 from PIL import Image
@@ -90,17 +91,10 @@ else:
     output5 = output3_5[1]
     output6 = output2_6[1]
     output7 = output1_7[1]
-output_data = output1[0]*255
-utils.save_image(inputFile[:-4] + '-esti1' + inputFile[-4:], output_data)
-output_data = output2[0]*255
-utils.save_image(inputFile[:-4] + '-esti2' + inputFile[-4:], output_data)
-output_data = output3[0]*255
-utils.save_image(inputFile[:-4] + '-esti3' + inputFile[-4:], output_data)
-output_data = output4[0]*255
-utils.save_image(inputFile[:-4] + '-esti4' + inputFile[-4:], output_data)
-output_data = output5[0]*255
-utils.save_image(inputFile[:-4] + '-esti5' + inputFile[-4:], output_data)
-output_data = output6[0]*255
-utils.save_image(inputFile[:-4] + '-esti6' + inputFile[-4:], output_data)
-output_data = output7[0]*255
-utils.save_image(inputFile[:-4] + '-esti7' + inputFile[-4:], output_data)
+results_dir = 'results'
+os.makedirs(results_dir, exist_ok=True)
+baseName = os.path.splitext(os.path.basename(inputFile))
+for i, out in enumerate([output1, output2, output3, output4, output5, output6, output7], 1):
+    output_data = out[0] * 255
+    save_path = os.path.join(results_dir, f'{baseName[0]}-esti{i}{baseName[1]}')
+    utils.save_image(save_path, output_data)
