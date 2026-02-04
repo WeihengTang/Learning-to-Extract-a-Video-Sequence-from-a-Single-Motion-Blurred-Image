@@ -10,15 +10,21 @@ month = {June},
 year = {2018}  
 }  
 ## **Requirements**
-The code has been updated to work with Python 3.8+ and PyTorch 1.9+.
+The code has been updated to work with Python 3.10+ and PyTorch 2.x.
 
-### Setup
+### Setup (GPU with CUDA 12.1)
 ```bash
-conda create -n deblur_py3 python=3.8 pytorch=1.9.0 torchvision=0.10.0 cpuonly pillow numpy -c pytorch -y
+conda create -n deblur_py3 python=3.10 pillow numpy -y
 conda activate deblur_py3
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 ```
 
-For GPU support, replace `cpuonly` with the appropriate CUDA version (e.g., `cudatoolkit=11.1`).
+### Setup (CPU only)
+```bash
+conda create -n deblur_py3 python=3.10 pillow numpy -y
+conda activate deblur_py3
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+```
 
 ## **Test**
 Download pretrained models from [here](https://www.dropbox.com/sh/r0n9x6uz1ke8iuy/AADJBQBf9E2UMzG4Gt2Az-Qza?dl=0) and place them in the `models/` directory.

@@ -19,9 +19,16 @@ args = parser.parse_args()
 # Determine device for loading models
 device = torch.device('cuda' if args.cuda and torch.cuda.is_available() else 'cpu')
 
+def _load_torch(path, device):
+    """torch.load wrapper compatible with both PyTorch 1.x and 2.x."""
+    try:
+        return torch.load(path, map_location=device, weights_only=False)
+    except TypeError:
+        return torch.load(path, map_location=device)
+
 def load_checkpoint(path, model, device):
     """Load checkpoint, filtering out InstanceNorm running stats for PyTorch 0.4+ compatibility."""
-    checkpoint = torch.load(path, map_location=device)
+    checkpoint = _load_torch(path, device)
     state_dict = checkpoint['state_dict_G']
     # Filter out running_mean/running_var (not used with track_running_stats=False)
     filtered = {k: v for k, v in state_dict.items()
