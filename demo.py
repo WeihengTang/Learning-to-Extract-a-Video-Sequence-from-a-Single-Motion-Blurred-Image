@@ -13,6 +13,7 @@ from model import F35_N8
 # Training settings
 parser = argparse.ArgumentParser(description='parser for video prediction')
 parser.add_argument('--input', type=str, required=True, help='input image')
+parser.add_argument('--output_dir', type=str, default='results', help='output directory')
 parser.add_argument('--cuda', action='store_true', help='use cuda')
 
 args = parser.parse_args()
@@ -91,11 +92,10 @@ else:
     output5 = output3_5[1]
     output6 = output2_6[1]
     output7 = output1_7[1]
-results_dir = 'results'
 baseName, ext = os.path.splitext(os.path.basename(inputFile))
-seq_dir = os.path.join(results_dir, baseName)
+seq_dir = os.path.join(args.output_dir, baseName)
 os.makedirs(seq_dir, exist_ok=True)
-for i, out in enumerate([output1, output2, output3, output4, output5, output6, output7], 1):
+for i, out in enumerate([output1, output2, output3, output4, output5, output6, output7]):
     output_data = out[0] * 255
-    save_path = os.path.join(seq_dir, f'{baseName}-esti{i}{ext}')
+    save_path = os.path.join(seq_dir, f'frame_{i:02d}.png')
     utils.save_image(save_path, output_data)

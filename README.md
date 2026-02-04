@@ -49,32 +49,34 @@ To be updated
 ### Step 1: Generate the benchmark set
 
 This creates deterministic blurred inputs and ground-truth frames from the Adobe240 dataset.
-For each sequence it selects the middle 17 frames and synthesises one motion-blurred image via gamma-aware averaging (`build_blur`).
+For each sequence it selects the middle 17 frames, synthesises one motion-blurred image via gamma-aware averaging (`build_blur`), and saves the 7 evenly-spaced GT frames that correspond to the model's 7 outputs.
 
 ```bash
 python generate_benchmark_set.py \
     --data_root /depot/chan129/users/harshana/Datasets/Adobe240/Adobe_240fps_dataset/Adobe_240fps_blur/full_sharp/ \
     --output_dir ./benchmark_data \
-    --output_len 17
+    --blur_len 17
 ```
-
-Outputs:
-- `./benchmark_data/input/` — one blurred `.png` per sequence
-- `./benchmark_data/gt/<seq_name>/frame_00.png … frame_16.png` — 17 ground-truth frames per sequence
-- `benchmark_generation_error.log` — full tracebacks for any sequences that fail (the script continues past failures)
 
 ### Step 2: Run inference on the benchmark set
 
-`demo.py` processes a single image and writes 7 extracted frames (`-esti1.png` … `-esti7.png`) next to it.
-Loop over all benchmark inputs:
-
 ```bash
 for img in ./benchmark_data/input/*.png; do
-    python demo.py --cuda --input "$img"
+    python demo.py --cuda --input "$img" --output_dir ./benchmark_data/output
 done
 ```
 
-The 7 reconstructed frames for each sequence will be saved in `./benchmark_data/input/` alongside the blurred inputs.
+### Output structure
+
+```
+benchmark_data/
+  input/<seq_name>.png                      # blurred input
+  gt/<seq_name>/frame_00.png … frame_06.png # 7 ground-truth frames
+  output/<seq_name>/frame_00.png … frame_06.png # 7 inferred frames
+```
+
+GT and output folders share the same naming so they can be compared frame-by-frame directly.
+Errors during data generation are logged to `benchmark_generation_error.log`.
 
 ## **Contact**
 If you have any suggestions and questions, please send an email to jinmeiguang@gmail.com
