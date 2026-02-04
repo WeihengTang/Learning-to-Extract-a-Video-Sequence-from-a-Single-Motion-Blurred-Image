@@ -92,9 +92,10 @@ else:
     output6 = output2_6[1]
     output7 = output1_7[1]
 results_dir = 'results'
-os.makedirs(results_dir, exist_ok=True)
-baseName = os.path.splitext(os.path.basename(inputFile))
+baseName, ext = os.path.splitext(os.path.basename(inputFile))
+seq_dir = os.path.join(results_dir, baseName)
+os.makedirs(seq_dir, exist_ok=True)
 for i, out in enumerate([output1, output2, output3, output4, output5, output6, output7], 1):
     output_data = out[0] * 255
-    save_path = os.path.join(results_dir, f'{baseName[0]}-esti{i}{baseName[1]}')
+    save_path = os.path.join(seq_dir, f'{baseName}-esti{i}{ext}')
     utils.save_image(save_path, output_data)
